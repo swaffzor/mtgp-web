@@ -22,10 +22,11 @@ const Home = () => {
       <div className="m-2">
         <NavBar/>
       </div>
-
-      {cards.map((card, index) => {
-        return (<Card name={card.name} key={index}/>)
-      })}
+      <div className="flex">
+        {cards.map((card, index) => {
+          return (<Card name={card.name} imageUrl={card.imageUrl} key={index}/>)
+        })}
+      </div>
     </div>
   )
 }

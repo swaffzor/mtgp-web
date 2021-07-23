@@ -1,14 +1,11 @@
 import React from 'react'
+import { CardDTO } from '../types'
 
-interface Props {
-  name: string
-}
-
-const Card = ({name}: Props) => {
-
+const Card = (props: Partial<CardDTO>) => {
+  const hasImage = !!props.imageUrl
   return (
-    <div className="border-2 w-32 h-32">
-      {name}
+    <div className={`m-1 w-32 ${!hasImage && "border-2 rounded-lg h-46"}`}>
+      {hasImage ? <img src={props?.imageUrl} alt="card art" /> : props?.name}
     </div>
   )
 }
