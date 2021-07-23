@@ -39,7 +39,7 @@ export interface BlockLegality {
 	legality: keyof typeof Legality;
 }
 
-export interface Card {
+export interface CardDTO {
 	name: string;
 	manaCost: string;
 	cmc: number;
@@ -72,7 +72,7 @@ export interface PlaneswalkerCard {
 	loyalty: number;
 }
 
-export interface CardFilter {
+export interface CardRequestParam {
 	name?: string;
 	layout?: string;
 	cmc?: number;
