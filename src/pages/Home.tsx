@@ -1,18 +1,34 @@
 import React, { useEffect, useState } from 'react'
-import Card from '../components/Card'
+import CardShelf from '../components/CardShelf'
 import NavBar from '../components/NavBar'
-import { fetchCards } from '../service'
+import { cardSearch, fetchCards } from '../service'
 import { CardDTO } from '../types'
 
 
 const Home = () => {
-  const [cards, setCards] = useState<CardDTO[]>([])
+  const [searchText, setSearchText] = useState("")
+  const [searchResults, setSearchResults] = useState<CardDTO[]>([])
+  const [myDeck, setMyDeck] = useState<CardDTO[]>([])
 
   useEffect(() => {
-    fetchCards({name: "elder g"}).then((results) => {
-      setCards(results)
-    })
+    fetchCards({name: "elder g"}).then((results) => {setSearchResults(results)})
   }, [])
+
+  const searchCards = async (e: React.KeyboardEvent) => {
+    if (e.key.toLowerCase() === "enter") {
+      const response = await cardSearch(searchText)
+      setSearchResults(response)
+    }
+  }  
+
+  const setDeck = (card: CardDTO, setFunc: (aCard: React.SetStateAction<CardDTO[]>) => void) => {
+    setFunc((deck) => {
+      if (!deck.includes(card)) {
+        deck.push(card)
+      }
+      return deck
+    })
+  }
 
   return (
     <div>
@@ -22,11 +38,25 @@ const Home = () => {
       <div className="m-2">
         <NavBar/>
       </div>
-      <div className="flex">
-        {cards.map((card, index) => {
-          return (<Card name={card.name} imageUrl={card.imageUrl} key={index}/>)
-        })}
+      <div className="relative">
+        <input type="text" 
+          className="absolute left-1 w-1/4 border rounded-md mx-1 pl-1" 
+          placeholder="search" 
+          onChange={(text) => {setSearchText(text.target.value)}}
+          onKeyPress={(e) => {searchCards(e)}}
+        />
       </div>
+
+      {searchText && <CardShelf
+        title="Search Results"
+        cards={searchResults}
+        onCardClick={(card) => setDeck(card, setMyDeck)}
+      />}
+
+      <CardShelf
+        title="My Deck"
+        cards={myDeck}
+      />
     </div>
   )
 }
