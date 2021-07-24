@@ -63,6 +63,7 @@ export interface CardDTO {
 	originalType: string;
 	legalities: BlockLegality[];
 	id: string;
+	isSaved?: boolean
 }
 export interface CreatureCard {
 	power: string;

@@ -23,6 +23,7 @@ const Card = ({cardProps, onClick}: props) => {
             <img 
               src={cardProps?.imageUrl}
               alt="card art"
+              className={cardProps?.isSaved ? "" : "border-2 border-red-400"}
             />
         : cardProps?.name}
     </div>
