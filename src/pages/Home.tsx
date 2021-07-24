@@ -14,6 +14,11 @@ const Home = () => {
     fetchCards({name: "elder g"}).then((results) => {setSearchResults(results)})
   }, [])
 
+  useEffect(() => {
+    const savedCards = localStorage.getItem("my-deck")
+    savedCards && setMyDeck(JSON.parse(savedCards))
+  }, [])
+
   const searchCards = async (e: React.KeyboardEvent) => {
     if (e.key.toLowerCase() === "enter") {
       const response = await cardSearch(searchText)
@@ -31,8 +36,8 @@ const Home = () => {
   }
 
   const saveCards = () => {
-    localStorage.setItem("my-deck", JSON.stringify(myDeck))
     myDeck.forEach(card => card.isSaved = true)
+    localStorage.setItem("my-deck", JSON.stringify(myDeck))
   }
 
   return (
@@ -43,6 +48,7 @@ const Home = () => {
       <div className="m-2">
         <NavBar/>
       </div>
+
       <div className="relative">
         <input type="text" 
           className="absolute left-1 w-1/4 border rounded-md mx-1 pl-1" 
