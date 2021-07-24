@@ -1,4 +1,4 @@
-import React, { MouseEventHandler } from 'react'
+import React from 'react'
 import { CardDTO } from '../types'
 
 interface props {
@@ -23,7 +23,7 @@ const Card = ({cardProps, onClick}: props) => {
             <img 
               src={cardProps?.imageUrl}
               alt="card art"
-              className={cardProps?.isSaved ? "" : "border-2 border-red-400"}
+              className={cardProps?.isSaved ? "" : "border-2 border-red-400 rounded-lg border-dashed"}
             />
         : cardProps?.name}
     </div>
