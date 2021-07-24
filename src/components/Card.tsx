@@ -10,7 +10,12 @@ const Card = ({cardProps, onClick}: props) => {
   const hasImage = !!cardProps.imageUrl
   return (
     <div 
-      className={`m-1 w-32 ${!hasImage && "border-2 rounded-lg h-46"}`}
+      className={
+        [
+          `m-1 w-32 ${!hasImage && "border-2 rounded-lg h-46"}`,
+          onClick && "cursor-pointer"
+        ].join(' ')
+      }
       onClick={() => onClick && onClick()}
     >
       {hasImage
