@@ -30,6 +30,11 @@ const Home = () => {
     })
   }
 
+  const saveCards = () => {
+    localStorage.setItem("my-deck", JSON.stringify(myDeck))
+    myDeck.forEach(card => card.isSaved = true)
+  }
+
   return (
     <div>
       <h1>
@@ -47,15 +52,17 @@ const Home = () => {
         />
       </div>
 
-      {searchText && <CardShelf
+      {searchText && (
+      <CardShelf
         title="Search Results"
         cards={searchResults}
         onCardClick={(card) => setDeck(card, setMyDeck)}
-      />}
+      />)}
 
       <CardShelf
         title="My Deck"
         cards={myDeck}
+        button={{text: "Save", onClick: saveCards}}
       />
     </div>
   )
