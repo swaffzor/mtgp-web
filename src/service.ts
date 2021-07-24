@@ -15,3 +15,7 @@ const buildParameters = (request: CardRequestParam) => {
 
   return params.length > 0 ? `?${params.join("&")}` : ""
 }
+
+export const cardSearch = async (text: string) => {
+  return fetchCards({name: text})
+}
