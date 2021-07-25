@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CardShelf from '../components/CardShelf'
+import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
 import { CardDTO } from '../types'
@@ -36,14 +37,20 @@ const Home = () => {
         <NavBar/>
       </div>
 
-      <div className="relative">
-        <input type="text" 
-          className="absolute left-1 w-1/4 border rounded-md mx-1 pl-1" 
-          placeholder="search" 
-          onChange={(text) => {setSearchText(text.target.value)}}
-          onKeyPress={async (e) => {await searchCards(e)}}
-        />
-      </div>
+      <CardShelf
+        id="my-deck"
+        title="My Deck"
+        cards={myDeck}
+        button={{text: "Save", onClick: saveCards}}
+      />
+
+      <Input
+        type="text"
+        classOverrides="absolute left-1 w-1/4 border rounded-md my-2 pl-1" 
+        placeholder="search" 
+        onChange={(text) => {setSearchText(text.target.value)}}
+        onKeyPress={async (e) => {await searchCards(e)}}
+      />
 
       {searchText && (
       <CardShelf
@@ -52,13 +59,6 @@ const Home = () => {
         cards={searchResults}
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
-
-      <CardShelf
-        id="my-deck"
-        title="My Deck"
-        cards={myDeck}
-        button={{text: "Save", onClick: saveCards}}
-      />
     </div>
   )
 }
