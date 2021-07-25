@@ -11,12 +11,23 @@ interface Props {
 }
 
 const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
+  const numColumns = 10
+
   return (
     <div className="mx-1 mt-10 border-2 border-black rounded-md">
       <div className="border-b-2 border-black">
         {title}
       </div>
-      <div className="flex">
+      <div className={[
+        `flex-col grid grid-flow-row gap-x-0`,
+        `grid-cols-3`,
+        `sm:grid-cols-4`,
+        `md:grid-cols-5`,
+        `lg:grid-cols-6`,
+        `xl:grid-cols-7`,
+        `2xl:grid-cols-${numColumns} grid-rows-${cards.length/numColumns}`
+        ].join(' ')
+      }>
         {cards.map((card, index) => {
           return (
             <Card 
