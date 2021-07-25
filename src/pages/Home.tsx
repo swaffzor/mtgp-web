@@ -1,7 +1,7 @@
 import React, { useEffect, useState } from 'react'
 import CardShelf from '../components/CardShelf'
 import NavBar from '../components/NavBar'
-import { cardSearch, fetchCards } from '../service'
+import { cardSearch } from '../service'
 import { CardDTO } from '../types'
 
 
@@ -9,10 +9,6 @@ const Home = () => {
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState<CardDTO[]>([])
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
-
-  useEffect(() => {
-    fetchCards({name: "elder g"}).then((results) => {setSearchResults(results)})
-  }, [])
 
   useEffect(() => {
     const savedCards = localStorage.getItem("my-deck")
@@ -24,15 +20,6 @@ const Home = () => {
       const response = await cardSearch(searchText)
       setSearchResults(response)
     }
-  }  
-
-  const setDeck = (card: CardDTO, setFunc: (aCard: React.SetStateAction<CardDTO[]>) => void) => {
-    setFunc((deck) => {
-      if (!deck.includes(card)) {
-        deck.push(card)
-      }
-      return deck
-    })
   }
 
   const saveCards = () => {
@@ -54,7 +41,7 @@ const Home = () => {
           className="absolute left-1 w-1/4 border rounded-md mx-1 pl-1" 
           placeholder="search" 
           onChange={(text) => {setSearchText(text.target.value)}}
-          onKeyPress={(e) => {searchCards(e)}}
+          onKeyPress={async (e) => {await searchCards(e)}}
         />
       </div>
 
@@ -63,7 +50,7 @@ const Home = () => {
         id="search-results"
         title="Search Results"
         cards={searchResults}
-        onCardClick={(card) => setDeck(card, setMyDeck)}
+        onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
 
       <CardShelf
