@@ -60,12 +60,14 @@ const Home = () => {
 
       {searchText && (
       <CardShelf
+        id="search-results"
         title="Search Results"
         cards={searchResults}
         onCardClick={(card) => setDeck(card, setMyDeck)}
       />)}
 
       <CardShelf
+        id="my-deck"
         title="My Deck"
         cards={myDeck}
         button={{text: "Save", onClick: saveCards}}
