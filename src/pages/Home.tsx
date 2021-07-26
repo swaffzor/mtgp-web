@@ -38,11 +38,9 @@ const Home = () => {
 
       <NavBar/>
 
-      <CardShelf
-        id="my-deck"
-        title="My Deck"
-        cards={myDeck}
-        button={{text: "Save", onClick: saveCards}}
+      <DeckImport
+        setDeck={setMyDeck}
+        setQuantity={setCardCounts}
       />
 
       <Input
@@ -61,9 +59,11 @@ const Home = () => {
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
 
-      <DeckImport
-        setDeck={setMyDeck}
-        setQuantity={setCardCounts}
+      <CardShelf
+        id="my-deck"
+        title="My Deck"
+        cards={myDeck}
+        button={{text: "Save", onClick: saveCards}}
       />
 
     </div>

@@ -17,12 +17,16 @@ export interface CardQuantity extends CardRequestParam {
 const DeckImport = ({setDeck, setQuantity}: Props) => {
   const [isHidden, setIsHidden] = useState(true)
   const [text, setText] = useState("")
+  const [buttonDisabled, setButtonDisabled] = useState(false)
 
-  const handleButtonClick = () => {
+  const handleButtonClick = async () => {
     if (isHidden) {
       setIsHidden(!isHidden)
     } else {
-      importDeck()
+      setButtonDisabled(true)
+      setIsHidden(!isHidden)
+      await importDeck()
+      setButtonDisabled(false)
     }
   }
 
@@ -46,7 +50,7 @@ const DeckImport = ({setDeck, setQuantity}: Props) => {
 
     const responses = await Promise.all(promises)
     const sanitized = responses.map((arr: CardDTO[]) => {
-      return arr.length > 0 ? arr[0] : undefined
+      return arr.length > 0 ? arr.length > 1 ? arr?.find(card => card.imageUrl) : arr[0] : undefined
     }).filter(c => c) as CardDTO[]
     
     setDeck(sanitized)
@@ -55,22 +59,28 @@ const DeckImport = ({setDeck, setQuantity}: Props) => {
 
   return (
     <div className="relative m-1">
-      <div className={`absolute left-0 ${isHidden && "hidden"}`}>
+      <div className={`w-32 left-0 ${isHidden && "hidden"}`}>
         <Input
           type="text"
           placeholder="Deck Name"
-          classOverrides="border rounded-lg px-1 absolute left-0"
+          classOverrides="border rounded-lg px-1 w-32 left-0"
         />
         <TextareaAutosize 
-          className="border rounded-lg px-1 absolute left-0 w-80"
+          className="border rounded-lg px-1 left-0 w-80"
           minRows={6}
           onChange={(e) => {setText(e.target.value)}}
         />
         <br />
       </div>
-      <button className=" left-0 border rounded-lg mt-24 px-4" onClick={handleButtonClick}>
-        Import Deck
-      </button>
+      <div className="border rounded-lg px-4 w-32">
+        <button
+          className={`${buttonDisabled && "text-gray-400"}`}
+          onClick={handleButtonClick} 
+          disabled={buttonDisabled}
+        >
+          {buttonDisabled ? "Loading..." : "Import Deck"}
+        </button>
+      </div>
     </div>
   )
 }
