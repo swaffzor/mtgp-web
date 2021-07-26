@@ -63,11 +63,9 @@ export interface CardDTO {
 	originalType: string;
 	legalities: BlockLegality[];
 	id: string;
+	power?: string;
+	toughness?: string;
 	isSaved?: boolean
-}
-export interface CreatureCard {
-	power: string;
-	toughness: string;
 }
 export interface PlaneswalkerCard {
 	loyalty: number;
