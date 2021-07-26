@@ -2,19 +2,13 @@ import React, { useState } from 'react'
 import Input from './Input'
 import TextareaAutosize from 'react-textarea-autosize';
 import { CardDTO, CardRequestParam } from '../types';
-import { fetchCards } from '../service';
+import { fetchCard } from '../service';
 
 interface Props {
   setDeck: (d: CardDTO[]) => void
-  setQuantity: (c: CardQuantity[]) => void
 }
 
-export interface CardQuantity extends CardRequestParam {
-  quantity: number
-  guid: string
-}
-
-const DeckImport = ({setDeck, setQuantity}: Props) => {
+const DeckImport = ({setDeck}: Props) => {
   const [isHidden, setIsHidden] = useState(true)
   const [text, setText] = useState("")
   const [buttonDisabled, setButtonDisabled] = useState(false)
@@ -31,30 +25,23 @@ const DeckImport = ({setDeck, setQuantity}: Props) => {
   }
 
   const importDeck = async () => {
-    const deckCardCounts: CardQuantity[] = []
     const textLines = text.split("\n")
     const promises = textLines.map(line => {
-      if (!line.includes("Deck")) {
-        const amount = line.match(/[0-9]+ /g)?.join("").trim()
-        const cardName = line.match(/ [A-Za-z-,' ]+ /g)?.join("").trim()
-        const cardSet = line.match(/\([A-Za-z]+[0-9]*\)/g)?.join("").trim().match(/[A-Za-z0-9]+/g)?.join("").trim()
-        const cardBits = line.match(/ [0-9]+/g)?.join("").trim()
         const cardRequest: CardRequestParam = {
-          name: cardName,
-          set: cardSet,
+          name: line.match(/ [A-Za-z-,' ]+ /g)?.join("").trim(),
+          set: line.match(/\([A-Za-z]+[0-9]*\)/g)?.join("").trim().match(/[A-Za-z0-9]+/g)?.join("").trim(),
+          quantity: Number(line.match(/[0-9]+ /g)?.join("").trim()),
         }
-        deckCardCounts.push({...cardRequest, quantity: Number(amount), guid: new Date().toString()})
-        return fetchCards(cardRequest)
-      }
-    }).filter(p => p)
+        return line.includes("Deck") ? new Promise<CardDTO[]>((resolve, reject) => resolve([])) : fetchCard(cardRequest)
+    })
 
-    const responses = await Promise.all(promises)
-    const sanitized = responses.map((arr: CardDTO[]) => {
-      return arr.length > 0 ? arr.length > 1 ? arr?.find(card => card.imageUrl) : arr[0] : undefined
-    }).filter(c => c) as CardDTO[]
+    const responses = (await Promise.all(promises))
+    .map((arr: CardDTO[]) => {
+      return arr?.find(card => card.imageUrl) ?? (arr.length > 0 ? arr[arr.findIndex(card => card.name)] : undefined)
+    })
+    .filter(c => c) as CardDTO[]
     
-    setDeck(sanitized)
-    setQuantity(deckCardCounts)
+    setDeck(responses)
   }
 
   return (

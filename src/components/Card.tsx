@@ -41,7 +41,7 @@ const Card = ({cardProps, onClick}: props) => {
           </div> 
         }
         <div className={`text-xs`}>
-          {cardProps?.name}
+          {cardProps?.name} {`(${cardProps.quantity})`}
         </div>
       </div>
     </div>

@@ -1,12 +1,17 @@
-import { CardRequestParam } from "./types"
+import { CardDTO, CardRequestParam } from "./types"
 
 const baseURL = "https://api.magicthegathering.io/v1"
 
-
-export const fetchCards = async (request: CardRequestParam) => {
+export const fetchCard = async (request: CardRequestParam): Promise<CardDTO[]> => {
   const params = buildParameters(request)
   const response = await fetch(`${baseURL}/cards${params}`)
-  return (await response.json()).cards
+  const cards = (await response.json()).cards as CardDTO[]
+  return cards.map(card => {
+    return {
+      ...card,
+      quantity: request.quantity
+    }
+  })
 }
 
 const buildParameters = (request: CardRequestParam) => {
@@ -18,5 +23,5 @@ const buildParameters = (request: CardRequestParam) => {
 }
 
 export const cardSearch = async (text: string) => {
-  return fetchCards({name: text})
+  return fetchCard({name: text})
 }
