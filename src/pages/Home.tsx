@@ -1,5 +1,6 @@
 import React, { useEffect, useState } from 'react'
 import CardShelf from '../components/CardShelf'
+import DeckImport, { CardQuantity } from '../components/DeckImport'
 import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
@@ -10,6 +11,7 @@ const Home = () => {
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState<CardDTO[]>([])
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
+  const [cardCounts, setCardCounts] = useState<CardQuantity[]>([])
 
   useEffect(() => {
     const savedCards = localStorage.getItem("my-deck")
@@ -33,9 +35,8 @@ const Home = () => {
       <h1>
         Magic Stats Gathering  
       </h1>
-      <div className="m-2">
-        <NavBar/>
-      </div>
+
+      <NavBar/>
 
       <CardShelf
         id="my-deck"
@@ -59,6 +60,12 @@ const Home = () => {
         cards={searchResults}
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
+
+      <DeckImport
+        setDeck={setMyDeck}
+        setQuantity={setCardCounts}
+      />
+
     </div>
   )
 }

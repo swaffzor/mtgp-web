@@ -33,7 +33,7 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
             <Card 
               cardProps={card}
               onClick={() => onCardClick && onCardClick(card)}
-              key={`${id}-${card.name.replaceAll(" ", "-")}-${index}`}
+              key={`${id}-${card.name}-${index}`}
           />)
         })}
       </div>

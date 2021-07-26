@@ -12,7 +12,7 @@ interface Props {
 const Input = ({type, value, placeholder, classOverrides, onChange, onKeyPress}: Props) => {
 
   return (
-    <div className="relative">
+    <div className="relative h-10">
       <input type={type}
         value={value}
         className={classOverrides} 
