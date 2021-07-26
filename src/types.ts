@@ -65,7 +65,8 @@ export interface CardDTO {
 	id: string;
 	power?: string;
 	toughness?: string;
-	isSaved?: boolean
+	isSaved?: boolean;
+	quantity?: string;
 }
 export interface PlaneswalkerCard {
 	loyalty: number;
@@ -100,6 +101,7 @@ export interface CardRequestParam {
 	orderBy?: string;
 	random?: boolean;
 	contains?: string;
+	quantity?: string;
 }
 
 export interface PaginationFilter {
