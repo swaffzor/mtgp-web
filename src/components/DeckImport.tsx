@@ -2,7 +2,7 @@ import React, { useEffect, useState } from 'react'
 import Input from './Input'
 import TextareaAutosize from 'react-textarea-autosize';
 import { CardDTO, CardRequestParam } from '../types';
-import { fetchCard, CardFetchError, cardSearch } from '../service';
+import { fetchCard, CardFetchError } from '../service';
 
 interface Props {
   setDeck: (d: CardDTO[]) => void
@@ -17,6 +17,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
 
   useEffect(() => {
     setNotFound(cardsNotFound)
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, [cardsNotFound])
 
   const handleButtonClick = async () => {
@@ -30,6 +31,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
     }
   }
 
+  const empty = {} as CardDTO
   const importDeck = async () => {
     const textLines = text.split("\n")
     const promises = textLines.map(line => {
@@ -55,10 +57,20 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
             return new Promise<CardDTO>((resolve, reject) => resolve(empty)) 
           })
     })
+    const cards = (await Promise.all(promises)).filter(card => card !== empty)
+    await replaceImagelessCards(cards)
+    return cards
+  }
 
-    const responses = (await Promise.all(promises))
-    .map((arr: CardDTO[]) => {
-      return arr?.find(card => card.imageUrl) ?? (arr.length > 0 ? arr[arr.findIndex(card => card.name)] : undefined)
+  const replaceImagelessCards = async (imagelessCards: CardDTO[]) => {
+    const cardsWithoutImages = imagelessCards.filter(card => !card.imageUrl)
+    const newReq = cardsWithoutImages.map(card => fetchCard({name: card.name, contains: "imageUrl"})
+      .then(res => res.find(findCard => findCard.imageUrl !== "") ?? card))
+    const cardsMostLikelyWithImages = await Promise.all(newReq)
+    // eslint-disable-next-line array-callback-return
+    cardsMostLikelyWithImages.map((card) => {
+      const index = imagelessCards.findIndex(imagelessCard => imagelessCard.name === card.name)
+      index >= 0 && index < imagelessCards.length && imagelessCards.splice(index, 1, card)
     })
   }
 
