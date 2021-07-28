@@ -1,17 +1,23 @@
-import React, { useState } from 'react'
+import React, { useEffect, useState } from 'react'
 import Input from './Input'
 import TextareaAutosize from 'react-textarea-autosize';
 import { CardDTO, CardRequestParam } from '../types';
-import { fetchCard } from '../service';
+import { fetchCard, CardFetchError, cardSearch } from '../service';
 
 interface Props {
   setDeck: (d: CardDTO[]) => void
+  setNotFound: (v: string[]) => void
 }
 
-const DeckImport = ({setDeck}: Props) => {
+const DeckImport = ({setDeck, setNotFound}: Props) => {
   const [isHidden, setIsHidden] = useState(true)
   const [text, setText] = useState("")
   const [buttonDisabled, setButtonDisabled] = useState(false)
+  const [cardsNotFound, setCardsNotFound] = useState<string[]>([])
+
+  useEffect(() => {
+    setNotFound(cardsNotFound)
+  }, [cardsNotFound])
 
   const handleButtonClick = async () => {
     if (isHidden) {
@@ -19,7 +25,7 @@ const DeckImport = ({setDeck}: Props) => {
     } else {
       setButtonDisabled(true)
       setIsHidden(!isHidden)
-      await importDeck()
+      setDeck(await importDeck())
       setButtonDisabled(false)
     }
   }
@@ -30,18 +36,30 @@ const DeckImport = ({setDeck}: Props) => {
         const cardRequest: CardRequestParam = {
           name: line.match(/ [A-Za-z-,' ]+ /g)?.join("").trim(),
           set: line.match(/\([A-Za-z]+[0-9]*\)/g)?.join("").trim().match(/[A-Za-z0-9]+/g)?.join("").trim(),
-          quantity: Number(line.match(/[0-9]+ /g)?.join("").trim()),
+          quantity: line.match(/[0-9]+ /g)?.join("").trim(),
         }
-        return line.includes("Deck") ? new Promise<CardDTO[]>((resolve, reject) => resolve([])) : fetchCard(cardRequest)
+        if (!cardRequest.name  && !cardRequest.quantity ) {
+          return empty
+        } 
+
+        return fetchCard(cardRequest)
+          .then(cards => {
+            return cards?.find(card => card.imageUrl !== undefined) ?? (
+              cards.length > 0 
+                ? cards[cards.findIndex(card => card.name)] 
+                : empty
+              )
+          })
+          .catch((error: CardFetchError) => {
+            error.statusCode === 404 && setCardsNotFound([...cardsNotFound, `${error.cardProps?.quantity} ${error.cardProps?.name} (${error.cardProps?.set})` ?? "unknown card import error"])
+            return new Promise<CardDTO>((resolve, reject) => resolve(empty)) 
+          })
     })
 
     const responses = (await Promise.all(promises))
     .map((arr: CardDTO[]) => {
       return arr?.find(card => card.imageUrl) ?? (arr.length > 0 ? arr[arr.findIndex(card => card.name)] : undefined)
     })
-    .filter(c => c) as CardDTO[]
-    
-    setDeck(responses)
   }
 
   return (

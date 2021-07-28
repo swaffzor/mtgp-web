@@ -11,6 +11,7 @@ const Home = () => {
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState<CardDTO[]>([])
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
+  const [notFound, setNotFound] = useState<string[]>([])
 
   useEffect(() => {
     const savedCards = localStorage.getItem("my-deck")
@@ -39,6 +40,9 @@ const Home = () => {
 
       <DeckImport
         setDeck={setMyDeck}
+        setNotFound={(cardNames: string[]) => {
+          setNotFound([...notFound, ...cardNames])
+        }}
       />
 
       <Input
@@ -56,6 +60,17 @@ const Home = () => {
         cards={searchResults}
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
+
+      {notFound.length > 0 && 
+        (<div>
+          <h1>Not Found</h1>
+          {notFound.map(c =>
+            <div key={`notfound-${c}`}>
+              {c}
+            </div>
+          )}
+        </div>)
+      }
 
       <CardShelf
         id="my-deck"
