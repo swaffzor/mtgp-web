@@ -35,6 +35,7 @@ const Card = ({cardProps, onClick}: props) => {
           />
           : 
           <div className={`relative ${style.height} ${cardProps?.isSaved ? !hasImage && "border-2 rounded-lg" : "border-2 border-red-400 rounded-lg border-dashed"}`}>
+            {cardProps.type === "imageless" && "No Data Available"}
             <div className={`absolute bottom-0 right-1`}>
               {cardProps?.power && `${cardProps?.power}/${cardProps?.toughness}`}
             </div>
