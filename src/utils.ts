@@ -21,7 +21,7 @@ export const calculateProbability = (deck: CardDTO[]) => {
   }, 0)
 
   return deck.map(card => {
-    card.drawProbability = card?.quantity && Math.ceil(card?.quantity / (deckTotal ?? deck.length) * 100)
+    card.drawProbability = card?.quantity && (card?.quantity / (deckTotal ?? deck.length) * 100)
     return card
   })
 }

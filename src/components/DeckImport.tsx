@@ -3,7 +3,7 @@ import Input from './Input'
 import TextareaAutosize from 'react-textarea-autosize';
 import { CardDTO, CardRequestParam } from '../types';
 import { fetchCard, CardFetchError } from '../service';
-import { parseBy } from '../utils';
+import { calculateProbability, parseBy } from '../utils';
 
 interface Props {
   setDeck: (d: CardDTO[]) => void
@@ -26,8 +26,8 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
       setIsHidden(!isHidden)
     } else {
       setButtonDisabled(true)
-      setIsHidden(!isHidden)
       setDeck(await importDeck())
+      setIsHidden(!isHidden)
       setButtonDisabled(false)
     }
   }
@@ -61,6 +61,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
     })
     const cards = (await Promise.all(promises)).filter(card => card !== empty)
     await replaceImagelessCards(cards)
+    calculateProbability(cards)
     return cards
   }
 

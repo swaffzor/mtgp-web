@@ -5,7 +5,7 @@ import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
 import { CardDTO } from '../types'
-import { calculateProbability, parseBy } from '../utils'
+import { calculateProbability } from '../utils'
 
 
 const Home = () => {
@@ -33,15 +33,12 @@ const Home = () => {
 
   const drawCard = (card: CardDTO) => {
     card.quantity = card?.quantity && card?.quantity - 1
+    calculateProbability(myDeck)
     const tempDeck = [...myDeck]
     const index = tempDeck.findIndex(deckCard => deckCard.name === card.name)
     tempDeck.splice(index, 1, card)
     setMyDeck(tempDeck)
   }
-
-  useEffect(() => {
-    calculateProbability(myDeck)
-  }, [myDeck])
 
   return (
     <div>
@@ -53,14 +50,7 @@ const Home = () => {
 
       <DeckImport
         setDeck={setMyDeck}
-        setNotFound={(cardNames: string[]) => {
-          const temp = cardNames.map(c => {
-            return {
-              quantity: parseBy("quantity", c)
-            }
-          })
-          setNotFound([...notFound, ...cardNames])
-        }}
+        setNotFound={(cardNames: string[]) => setNotFound([...notFound, ...cardNames])}
       />
 
       <Input

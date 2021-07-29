@@ -4,4 +4,4 @@ While in game, use this app to see the probability of each card being drawn next
 * list view with name and quantity (no image)
 * handle double sided cards
 * sort cards by type, power, probabilty, name
-* [bugfix] update UI after saving deck
+* [bugfix] re-render UI after saving deck
