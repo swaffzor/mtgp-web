@@ -30,6 +30,14 @@ const Home = () => {
     localStorage.setItem("my-deck", JSON.stringify(myDeck))
   }
 
+  const drawCard = (card: CardDTO) => {
+    card.quantity = card?.quantity && card?.quantity - 1
+    const tempDeck = [...myDeck]
+    const index = tempDeck.findIndex(deckCard => deckCard.name === card.name)
+    tempDeck.splice(index, 1, card)
+    setMyDeck(tempDeck)
+  }
+
   return (
     <div>
       <h1>
@@ -77,6 +85,7 @@ const Home = () => {
         title="My Deck"
         cards={myDeck}
         button={{text: "Save", onClick: saveCards}}
+        onCardClick={drawCard}
       />
 
     </div>
