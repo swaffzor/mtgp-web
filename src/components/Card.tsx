@@ -41,6 +41,11 @@ const Card = ({cardProps, onClick}: props) => {
             </div>
           </div> 
         }
+        <div className={`relative`}>
+          <div className={`absolute text-red-600 bg-green-200 h-8 bottom-28 left-12 px-2`}>
+            {cardProps?.drawProbability && `${cardProps.drawProbability} %`}
+          </div>
+        </div>
         <div className={`text-xs`}>
           {cardProps?.name} {cardProps.quantity && `(${cardProps.quantity})`}
         </div>

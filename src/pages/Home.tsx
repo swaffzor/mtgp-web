@@ -5,6 +5,7 @@ import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
 import { CardDTO } from '../types'
+import { calculateProbability, parseBy } from '../utils'
 
 
 const Home = () => {
@@ -38,6 +39,10 @@ const Home = () => {
     setMyDeck(tempDeck)
   }
 
+  useEffect(() => {
+    calculateProbability(myDeck)
+  }, [myDeck])
+
   return (
     <div>
       <h1>
@@ -49,14 +54,19 @@ const Home = () => {
       <DeckImport
         setDeck={setMyDeck}
         setNotFound={(cardNames: string[]) => {
+          const temp = cardNames.map(c => {
+            return {
+              quantity: parseBy("quantity", c)
+            }
+          })
           setNotFound([...notFound, ...cardNames])
         }}
       />
 
       <Input
+        placeholder="search" 
         type="text"
         classOverrides="absolute left-1 w-1/4 border rounded-md my-2 pl-1" 
-        placeholder="search" 
         onChange={(text) => {setSearchText(text.target.value)}}
         onKeyPress={async (e) => {await searchCards(e)}}
       />
