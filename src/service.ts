@@ -33,7 +33,7 @@ export const fetchCard = async (request: CardRequestParam): Promise<CardDTO[]> =
   return cards.map(card => {
     return {
       ...card,
-      quantity: request.quantity
+      quantity: Number(request.quantity)
     }
   })
 }

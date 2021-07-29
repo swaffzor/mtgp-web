@@ -66,7 +66,7 @@ export interface CardDTO {
 	power?: string;
 	toughness?: string;
 	isSaved?: boolean;
-	quantity?: string;
+	quantity?: number;
 }
 export interface PlaneswalkerCard {
 	loyalty: number;
