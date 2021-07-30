@@ -4,7 +4,7 @@ import DeckImport from '../components/DeckImport'
 import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
-import { CardDTO, CardSort } from '../types'
+import { CardDTO } from '../types'
 import { calculateProbability } from '../utils'
 
 
@@ -14,8 +14,6 @@ const Home = () => {
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
   const [myHand, setMyHand] = useState<CardDTO[]>([])
   const [notFound, setNotFound] = useState<string[]>([])
-  const [sort, setSort] = useState<CardSort>(CardSort.name)
-  const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
 
   useEffect(() => {
     const savedCards = localStorage.getItem("my-deck")
@@ -36,15 +34,19 @@ const Home = () => {
 
   const drawCard = (card: CardDTO) => {
     card.quantity = card?.quantity && card?.quantity - 1
-    calculateProbability(myDeck)
-    removeCardFromDeck(card, myDeck, setMyDeck)
+    calculateProbability(myDeck);
+    if ((card.quantity??0) > 0) {
+      setMyDeck(myDeck)
+    } else {
+      setMyDeck([...myDeck].filter(deckCard => deckCard.name !== card.name))      
+    }
     setMyHand([...myHand, card])
   }
 
   const removeCardFromDeck = (card: CardDTO, deck: CardDTO[], setDeckFn: (deck: CardDTO[])=>void) => {
     const tempDeck = [...deck]
     const index = tempDeck.findIndex(deckCard => deckCard.name === card.name)
-    card.quantity ? tempDeck.splice(index, 1, card) : tempDeck.splice(index, 1)
+    tempDeck.splice(index, 1)
     setDeckFn(tempDeck)
   }
 
@@ -75,7 +77,6 @@ const Home = () => {
         title="Search Results"
         cards={searchResults}
         shelfType="image"
-        sortBy={CardSort.name}
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
 
@@ -95,9 +96,7 @@ const Home = () => {
         title="In Hand"
         cards={myHand}
         shelfType="image"
-        sortBy={sort}
-        onCardClick={(card) => removeCardFromDeck(card, myHand, setMyHand)
-        }
+        onCardClick={(card) => removeCardFromDeck(card, myHand, setMyHand)}
       />
 
       <CardShelf
@@ -105,32 +104,8 @@ const Home = () => {
         title="My Deck"
         cards={myDeck}
         shelfType="list"
-        sortBy={sort}
-        sortDirection={sortDirection}
         button={{text: "Save", onClick: saveCards}}
         onCardClick={drawCard}
-        onSortClick={(sort: CardSort) => {
-          let direction: ""|"ASC"|"DESC" = ""
-          switch (sortDirection) { 
-            case "":
-              direction = "ASC"
-              break;
-            case "ASC":
-              direction = "DESC"
-              break;
-            case "DESC":
-              direction = "ASC"
-              break;
-          
-            default:
-              break;
-          }
-          setSort((prev) => {
-            setSortDirection(prev !== sort ? sortDirection : direction)
-            return sort
-          })
-          // setSortDirection(direction)
-        }}
       />
 
     </div>

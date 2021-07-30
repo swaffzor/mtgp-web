@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useState } from 'react'
 import { CardDTO, CardSort } from '../types'
 import Card from './Card'
 import CardList from './CardList'
@@ -6,13 +6,10 @@ import CardList from './CardList'
 interface Props {
   id: string
   cards: CardDTO[]
-  sortBy: CardSort
   shelfType: "image"|"list"
-  sortDirection?: ""|"ASC"|"DESC"
   title?: string
   button?: {text: string, onClick?: () => void}
   onCardClick?: (card: CardDTO) => void
-  onSortClick?: (v: CardSort) => void
 }
 
 interface CardDisplayProps {
@@ -20,7 +17,10 @@ interface CardDisplayProps {
   index: number
 }
 
-const CardShelf = ({id, cards, sortBy, shelfType, sortDirection, title, button, onCardClick, onSortClick}: Props) => {
+const CardShelf = ({id, cards, shelfType, title, button, onCardClick}: Props) => {
+
+  const [sort, setSort] = useState<CardSort>(CardSort.name)
+  const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
   const numColumns = 10
   const CardDisplay = shelfType === "image" 
     ? ({card, index}: CardDisplayProps) => 
@@ -54,16 +54,35 @@ const CardShelf = ({id, cards, sortBy, shelfType, sortDirection, title, button, 
         </span>
       {
         Object.keys(CardSort).map(key => {
-          return <div className={`m-2 cursor-pointer`} key={key} onClick={() => onSortClick && onSortClick(key as CardSort)}>
+          return <div className={`m-2 cursor-pointer ${sort === key && "border-b-2 border-gray-600"}`} key={key} onClick={() => {
+            let direction: ""|"ASC"|"DESC" = ""
+            switch (sortDirection) { 
+              case "":
+                direction = "ASC"
+                break;
+              case "ASC":
+                direction = "DESC"
+                break;
+              case "DESC":
+                direction = "ASC"
+                break;
+              default:
+                break;
+            }
+            setSort((prev) => {
+              setSortDirection(prev !== sort ? sortDirection : direction)
+              return key as CardSort
+            })
+          }}>
             {`${key}`}
           </div>
         })
       }
       </div>
-      <div className={shelfType === "image" ? imageLayout : ``}>
+      <div className={shelfType === "image" ? imageLayout : `grid grid-cols-6 gap-x-0`}>
         {cards.sort((a, b) => {
           const direction = sortDirection === "DESC" ? -1 : 1
-          return (a[sortBy] ?? 0) > (b[sortBy] ?? 0) ? 1 * direction : -1 * direction
+          return (a[sort] ?? 0) > (b[sort] ?? 0) ? 1 * direction : -1 * direction
         }).map((card, index) => {
           return (
             <CardDisplay card={card} index={index} />)

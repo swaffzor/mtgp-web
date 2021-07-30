@@ -19,15 +19,15 @@ const CardList = ({cardProps, onClick}: props) => {
       }
       onClick={() => onClick && onClick()}
     >
-      <div className={`my-2 border-2 border-blue-800 rounded-lg p-2 w-1/4`}>
-        <div className={`flex items-center relative text-md justify-start h-12`}>
+      <div className={`my-2 border-2 border-blue-800 rounded-lg p-2`}>
+        <div className={`flex items-center relative text-xs justify-start h-12`}>
           <div className={`absolute top-0`}>
             {cardProps.quantity}
           </div>
           <div className={`absolute bottom-0`}>
             {`${cardProps.drawProbability?.toFixed(1)}%`}
           </div>
-          <div className={`pl-16`}>
+          <div className={`ml-12`}>
             {cardProps.name} 
           </div>
         </div>

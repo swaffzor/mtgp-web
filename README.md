@@ -6,3 +6,7 @@ While in game, use this app to see the probability of each card being drawn next
 - [ ] (bugfix) re-render UI after saving deck
 - [ ] Hand shelf
 - [x] sort cards by type, power, probabilty, name
+- [ ] probability of creature, instant, sorcery, etc.
+- [ ] search decks, real time updating
+- [ ] deck's card history
+- [ ] deck's win/loss
