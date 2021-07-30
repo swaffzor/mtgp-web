@@ -7,11 +7,6 @@ interface props {
 }
 
 const CardList = ({cardProps, onClick}: props) => {
-  const [probability, setProbability] = useState("")
-  
-  useEffect(() => {
-    setProbability(`${cardProps.drawProbability?.toFixed(1) ?? ""} %`)
-  }, [cardProps?.drawProbability, cardProps?.quantity])
 
   return (
     <div 

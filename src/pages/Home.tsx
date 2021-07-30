@@ -12,6 +12,7 @@ const Home = () => {
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState<CardDTO[]>([])
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
+  const [myHand, setMyHand] = useState<CardDTO[]>([])
   const [notFound, setNotFound] = useState<string[]>([])
   const [sort, setSort] = useState<CardSort>(CardSort.name)
   const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
@@ -36,10 +37,15 @@ const Home = () => {
   const drawCard = (card: CardDTO) => {
     card.quantity = card?.quantity && card?.quantity - 1
     calculateProbability(myDeck)
-    const tempDeck = [...myDeck]
+    removeCardFromDeck(card, myDeck, setMyDeck)
+    setMyHand([...myHand, card])
+  }
+
+  const removeCardFromDeck = (card: CardDTO, deck: CardDTO[], setDeckFn: (deck: CardDTO[])=>void) => {
+    const tempDeck = [...deck]
     const index = tempDeck.findIndex(deckCard => deckCard.name === card.name)
-    tempDeck.splice(index, 1, card)
-    setMyDeck(tempDeck)
+    card.quantity ? tempDeck.splice(index, 1, card) : tempDeck.splice(index, 1)
+    setDeckFn(tempDeck)
   }
 
   return (
@@ -83,6 +89,16 @@ const Home = () => {
           )}
         </div>)
       }
+
+      <CardShelf
+        id="hand"
+        title="In Hand"
+        cards={myHand}
+        shelfType="image"
+        sortBy={sort}
+        onCardClick={(card) => removeCardFromDeck(card, myHand, setMyHand)
+        }
+      />
 
       <CardShelf
         id="my-deck"
