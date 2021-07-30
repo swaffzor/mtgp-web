@@ -69,6 +69,16 @@ export interface CardDTO {
 	quantity?: number;
 	drawProbability?: number
 }
+
+export enum CardSort {
+	name = "name",
+	manaCost = "manaCost",
+	cmc = "cmc",
+	drawProbability = "drawProbability",
+	quantity = "quantity",
+	type = "type",
+	power = "power"
+}
 export interface PlaneswalkerCard {
 	loyalty: number;
 }

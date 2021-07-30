@@ -4,7 +4,7 @@ import DeckImport from '../components/DeckImport'
 import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
-import { CardDTO } from '../types'
+import { CardDTO, CardSort } from '../types'
 import { calculateProbability } from '../utils'
 
 
@@ -13,6 +13,8 @@ const Home = () => {
   const [searchResults, setSearchResults] = useState<CardDTO[]>([])
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
   const [notFound, setNotFound] = useState<string[]>([])
+  const [sort, setSort] = useState<CardSort>(CardSort.name)
+  const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
 
   useEffect(() => {
     const savedCards = localStorage.getItem("my-deck")
@@ -66,6 +68,7 @@ const Home = () => {
         id="search-results"
         title="Search Results"
         cards={searchResults}
+        sortBy={CardSort.name}
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
 
@@ -84,8 +87,32 @@ const Home = () => {
         id="my-deck"
         title="My Deck"
         cards={myDeck}
+        sortBy={sort}
+        sortDirection={sortDirection}
         button={{text: "Save", onClick: saveCards}}
         onCardClick={drawCard}
+        onSortClick={(sort: CardSort) => {
+          let direction: ""|"ASC"|"DESC" = ""
+          switch (sortDirection) { 
+            case "":
+              direction = "ASC"
+              break;
+            case "ASC":
+              direction = "DESC"
+              break;
+            case "DESC":
+              direction = "ASC"
+              break;
+          
+            default:
+              break;
+          }
+          setSort((prev) => {
+            setSortDirection(prev !== sort ? sortDirection : direction)
+            return sort
+          })
+          // setSortDirection(direction)
+        }}
       />
 
     </div>
