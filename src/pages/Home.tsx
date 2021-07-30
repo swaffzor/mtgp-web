@@ -68,6 +68,7 @@ const Home = () => {
         id="search-results"
         title="Search Results"
         cards={searchResults}
+        shelfType="image"
         sortBy={CardSort.name}
         onCardClick={(card) => setMyDeck([...myDeck, card])}
       />)}
@@ -87,6 +88,7 @@ const Home = () => {
         id="my-deck"
         title="My Deck"
         cards={myDeck}
+        shelfType="list"
         sortBy={sort}
         sortDirection={sortDirection}
         button={{text: "Save", onClick: saveCards}}
