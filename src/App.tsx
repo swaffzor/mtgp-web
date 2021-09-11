@@ -1,26 +1,30 @@
-import React from 'react';
-import logo from './logo.svg';
+import React, { useState } from 'react';
 import './App.css';
+
 import Card from './components/Card';
 
 function App() {
+  const [strength, setStrength] = useState(1)
+  
   return (
     <div className="App">
-      <header className="App-header">
-        <img src={logo} className="App-logo" alt="logo" />
-        <p>
-          Edit <code>src/App.tsx</code> and save to reload.
-        </p>
-        <a
-          className="App-link"
-          href="https://reactjs.org"
-          target="_blank"
-          rel="noopener noreferrer"
-        >
-          Learn React
-        </a>
-      </header>
-      <Card df={'pootie action'} />
+        <div className="items-center flex">
+          <Card
+            title={'pootie action'} 
+            strength={1}
+            defense={10}
+          />
+          <Card
+            title={'invisible air'} 
+            strength={strength}
+            defense={1}
+            ability={
+              <div onClick={() => setStrength(strength + 1)}>
+                <p className="cursor-pointer">Add +1/+0</p>
+              </div>
+            }
+          />
+        </div>
     </div>
   );
 }
