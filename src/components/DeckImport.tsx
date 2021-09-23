@@ -60,7 +60,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
           })
     })
     const cards = (await Promise.all(promises)).filter(card => card !== empty)
-    await replaceImagelessCards(cards)
+    // await replaceImagelessCards(cards)
     calculateProbability(cards)
     return cards
   }

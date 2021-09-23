@@ -103,7 +103,7 @@ const Home = () => {
         id="my-deck"
         title="My Deck"
         cards={myDeck}
-        shelfType="list"
+        shelfType="image"
         button={{text: "Save", onClick: saveCards}}
         onCardClick={drawCard}
       />
