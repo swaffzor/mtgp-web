@@ -24,13 +24,6 @@ export const fetchCard = async (request: CardRequestParam): Promise<CardDTO[]> =
   const params = buildParameters(request)
   const response = await fetch(`${baseURL}/cards${params}`)
   const cards = (await response.json()).cards as CardDTO[]
-  return cards.map(card => {
-    return {
-      ...card,
-      quantity: request.quantity
-    }
-  })
-}
 
   if (cards.length < 1) {
     // api returns [] for anything not found
