@@ -1,4 +1,4 @@
-import React from 'react'
+import React, { useEffect, useState } from 'react'
 import { CardDTO } from '../types'
 
 interface props {
@@ -12,7 +12,13 @@ const style = {
 }
 
 const Card = ({cardProps, onClick}: props) => {
-  const hasImage = !!cardProps.imageUrl
+  const [probability, setProbability] = useState("")
+  const [hasImage, setHasImage] = useState(!!cardProps.imageUrl)
+  
+  useEffect(() => {
+    setProbability(`${cardProps.drawProbability?.toFixed(1) ?? ""} %`)
+  }, [cardProps?.drawProbability, cardProps?.quantity])
+
   return (
     <div 
       className={
@@ -31,17 +37,24 @@ const Card = ({cardProps, onClick}: props) => {
           <img 
             src={cardProps?.imageUrl}
             alt="card art"
+            onError={() => setHasImage(false)}
             className={`${cardProps?.isSaved ? "" : "border-2 border-red-400 rounded-lg border-dashed"}`}
           />
           : 
           <div className={`relative ${style.height} ${cardProps?.isSaved ? !hasImage && "border-2 rounded-lg" : "border-2 border-red-400 rounded-lg border-dashed"}`}>
+            {cardProps.type === "imageless" && "No Data Available"}
             <div className={`absolute bottom-0 right-1`}>
               {cardProps?.power && `${cardProps?.power}/${cardProps?.toughness}`}
             </div>
           </div> 
         }
+        <div className={`relative`}>
+          <div className={`absolute text-red-600 bg-green-200 h-8 bottom-28 left-12 px-2 rounded-lg`}>
+            {probability}
+          </div>
+        </div>
         <div className={`text-xs`}>
-          {cardProps?.name} {`(${cardProps.quantity})`}
+          {cardProps?.name} {cardProps.quantity && `(${cardProps.quantity})`}
         </div>
       </div>
     </div>

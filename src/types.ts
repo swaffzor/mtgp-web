@@ -67,6 +67,17 @@ export interface CardDTO {
 	toughness?: string;
 	isSaved?: boolean;
 	quantity?: number;
+	drawProbability?: number
+}
+
+export enum CardSort {
+	name = "name",
+	manaCost = "manaCost",
+	cmc = "cmc",
+	drawProbability = "drawProbability",
+	quantity = "quantity",
+	type = "type",
+	power = "power"
 }
 export interface PlaneswalkerCard {
 	loyalty: number;
@@ -101,7 +112,7 @@ export interface CardRequestParam {
 	orderBy?: string;
 	random?: boolean;
 	contains?: string;
-	quantity?: number;
+	quantity?: string;
 }
 
 export interface PaginationFilter {

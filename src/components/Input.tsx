@@ -5,11 +5,14 @@ interface Props {
   value?: string
   placeholder?: string
   classOverrides?: string
+  inputRef?: React.RefObject<HTMLInputElement>
   onChange?: (text: React.ChangeEvent<HTMLInputElement>) => void
   onKeyPress?: (e: React.KeyboardEvent) => void
+  onFocus?: (e: React.FocusEvent<HTMLInputElement>) => void
+  onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
 }
 
-const Input = ({type, value, placeholder, classOverrides, onChange, onKeyPress}: Props) => {
+const Input = ({type, value, placeholder, classOverrides, inputRef, onChange, onKeyPress, onBlur, onFocus}: Props) => {
 
   return (
     <div className="relative h-10">
@@ -17,8 +20,11 @@ const Input = ({type, value, placeholder, classOverrides, onChange, onKeyPress}:
         value={value}
         className={classOverrides} 
         placeholder={placeholder} 
-        onChange={(text) => {onChange && onChange(text)}}
+        onChange={(text) => onChange && onChange(text)}
         onKeyPress={(e) => onKeyPress && onKeyPress(e)}
+        onFocus={(e) => onFocus && onFocus(e)}
+        onBlur={(e) => onBlur && onBlur(e)}
+        ref={inputRef}
       />
     </div>
   )
