@@ -63,11 +63,21 @@ export interface CardDTO {
 	originalType: string;
 	legalities: BlockLegality[];
 	id: string;
-	isSaved?: boolean
+	power?: string;
+	toughness?: string;
+	isSaved?: boolean;
+	quantity?: number;
+	drawProbability?: number
 }
-export interface CreatureCard {
-	power: string;
-	toughness: string;
+
+export enum CardSort {
+	name = "name",
+	manaCost = "manaCost",
+	cmc = "cmc",
+	drawProbability = "drawProbability",
+	quantity = "quantity",
+	type = "type",
+	power = "power"
 }
 export interface PlaneswalkerCard {
 	loyalty: number;
@@ -102,6 +112,7 @@ export interface CardRequestParam {
 	orderBy?: string;
 	random?: boolean;
 	contains?: string;
+	quantity?: string;
 }
 
 export interface PaginationFilter {

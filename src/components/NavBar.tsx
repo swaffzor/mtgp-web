@@ -4,7 +4,7 @@ import NavLink from './NavLink'
 const NavBar = () => {
 
   return (
-    <div className="border border-b-2 border-blue-400">
+    <div className="border border-b-2 border-blue-400 m-2">
       <NavLink 
         text="Home"
         url=""
