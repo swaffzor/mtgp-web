@@ -1,0 +1,22 @@
+{
+  "files": {
+    "main.css": "/mtgp-web/static/css/main.b34637f0.chunk.css",
+    "main.js": "/mtgp-web/static/js/main.b78715e4.chunk.js",
+    "main.js.map": "/mtgp-web/static/js/main.b78715e4.chunk.js.map",
+    "runtime-main.js": "/mtgp-web/static/js/runtime-main.6b4b9559.js",
+    "runtime-main.js.map": "/mtgp-web/static/js/runtime-main.6b4b9559.js.map",
+    "static/js/2.1215dfe5.chunk.js": "/mtgp-web/static/js/2.1215dfe5.chunk.js",
+    "static/js/2.1215dfe5.chunk.js.map": "/mtgp-web/static/js/2.1215dfe5.chunk.js.map",
+    "static/js/3.bd7bdacc.chunk.js": "/mtgp-web/static/js/3.bd7bdacc.chunk.js",
+    "static/js/3.bd7bdacc.chunk.js.map": "/mtgp-web/static/js/3.bd7bdacc.chunk.js.map",
+    "index.html": "/mtgp-web/index.html",
+    "static/css/main.b34637f0.chunk.css.map": "/mtgp-web/static/css/main.b34637f0.chunk.css.map",
+    "static/js/2.1215dfe5.chunk.js.LICENSE.txt": "/mtgp-web/static/js/2.1215dfe5.chunk.js.LICENSE.txt"
+  },
+  "entrypoints": [
+    "static/js/runtime-main.6b4b9559.js",
+    "static/js/2.1215dfe5.chunk.js",
+    "static/css/main.b34637f0.chunk.css",
+    "static/js/main.b78715e4.chunk.js"
+  ]
+}
