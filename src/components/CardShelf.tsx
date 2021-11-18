@@ -21,6 +21,7 @@ interface CardDisplayProps {
 const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
   const [search, setSearch] = useState("")
   const [useSearchLock, setUseSearchLock] = useState(false)
+  const [showProbability, setShowProbability] = useState(true)
   const [shelfType, setShelfType] = useState<"image"|"list">("list")
   const [sort, setSort] = useState<CardSort>(CardSort.name)
   const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
@@ -36,6 +37,7 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
       <Card 
         cardProps={card} 
         onClick={() => onCardClick && onCardClick(card)}
+        showProbability={showProbability}
         key={`${id}-${card.name}-${index}`}
       />
     : ({card, index}: CardDisplayProps) => 
@@ -84,28 +86,30 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
 
         {
           Object.keys(CardSort).map(key => {
-            return <div className={`m-2 cursor-pointer ${sort === key && "border-b-2 border-gray-600"}`} key={key} onClick={() => {
-              let direction: ""|"ASC"|"DESC" = ""
-              switch (sortDirection) { 
-                case "":
-                  direction = "ASC"
-                  break;
-                  case "ASC":
-                    direction = "DESC"
-                    break;
+            return (
+              <div 
+                className={`m-2 cursor-pointer ${sort === key && "border-b-2 border-gray-600"}`} 
+                key={key} 
+                onClick={() => {
+                  let direction: ""|"ASC"|"DESC" = ""
+                  switch (sortDirection) { 
+                    case "ASC":
+                      direction = "DESC"
+                      break;
                     case "DESC":
+                    case "":
+                    default:
                       direction = "ASC"
                       break;
-                      default:
-                        break;
-                      }
-                      setSort((prev) => {
-                        setSortDirection(prev !== sort ? sortDirection : direction)
-                        return key as CardSort
-                      })
-                    }}>
-              {`${key}`}
-            </div>
+                  }
+                  setSort((prev) => {
+                    setSortDirection(prev !== sort ? sortDirection : direction)
+                    return key as CardSort
+                  })
+              }}>
+                {`${key}`}
+              </div>
+            )
           })
         }
 
@@ -117,9 +121,19 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
           onChange={() => {setShelfType(shelfType === "image" ? "list" : "image")}}
         />
       </div>
+
+      <div className="mx-4">
+        Show Probability
+        <Input
+          type="checkbox"
+          checked={showProbability}
+          onChange={() => setShowProbability(!showProbability)}
+        />
+      </div>
     </div>
 
       <div className={shelfType === "image" ? imageLayout : `grid grid-cols-6 gap-x-0`}>
+        {/* deepcode ignore NoZeroReturnedInSort: <please specify a reason of ignoring this> */}
         {cards.sort((a, b) => {
           const direction = sortDirection === "DESC" ? -1 : 1
           return (a[sort] ?? 0) > (b[sort] ?? 0) ? 1 * direction : -1 * direction
