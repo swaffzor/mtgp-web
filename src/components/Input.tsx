@@ -2,6 +2,7 @@ import React from 'react'
 
 interface Props {
   type: string
+  checked?: boolean
   value?: string
   placeholder?: string
   classOverrides?: string
@@ -12,12 +13,13 @@ interface Props {
   onBlur?: (e: React.FocusEvent<HTMLInputElement>) => void
 }
 
-const Input = ({type, value, placeholder, classOverrides, inputRef, onChange, onKeyPress, onBlur, onFocus}: Props) => {
+const Input = ({type, checked, value, placeholder, classOverrides, inputRef, onChange, onKeyPress, onBlur, onFocus}: Props) => {
 
   return (
     <div className="relative h-10">
       <input type={type}
         value={value}
+        checked={checked}
         className={classOverrides} 
         placeholder={placeholder} 
         onChange={(text) => onChange && onChange(text)}

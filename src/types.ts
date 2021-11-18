@@ -77,7 +77,7 @@ export enum CardSort {
 	drawProbability = "drawProbability",
 	quantity = "quantity",
 	type = "type",
-	power = "power"
+	power = "power",
 }
 export interface PlaneswalkerCard {
 	loyalty: number;

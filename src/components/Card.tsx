@@ -3,6 +3,7 @@ import { CardDTO } from '../types'
 
 interface props {
   cardProps: Partial<CardDTO>
+  showProbability?: boolean
   onClick?: () => void
 }
 const style = {
@@ -11,7 +12,7 @@ const style = {
   vitalWidth: "w-12"
 }
 
-const Card = ({cardProps, onClick}: props) => {
+const Card = ({cardProps, showProbability = true, onClick}: props) => {
   const [probability, setProbability] = useState("")
   const [hasImage, setHasImage] = useState(!!cardProps.imageUrl)
   
@@ -49,9 +50,9 @@ const Card = ({cardProps, onClick}: props) => {
           </div> 
         }
         <div className={`relative`}>
-          <div className={`absolute text-red-600 bg-green-200 h-8 bottom-28 left-12 px-2 rounded-lg`}>
+          {showProbability && <div className={`absolute text-red-600 bg-green-200 h-8 bottom-28 left-12 px-2 rounded-lg`}>
             {probability}
-          </div>
+          </div>}
         </div>
         <div className={`text-xs`}>
           {cardProps?.name} {cardProps.quantity && `(${cardProps.quantity})`}
