@@ -21,7 +21,7 @@ interface CardDisplayProps {
 const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
   const [search, setSearch] = useState("")
   const [useSearchLock, setUseSearchLock] = useState(false)
-  const [showProbability, setShowProbability] = useState(true)
+  const [showProbability, setShowProbability] = useState(false)
   const [shelfType, setShelfType] = useState<"image"|"list">("list")
   const [sort, setSort] = useState<CardSort>(CardSort.name)
   const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
@@ -55,7 +55,7 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
     `md:grid-cols-5`,
     `lg:grid-cols-6`,
     `xl:grid-cols-7`,
-    `2xl:grid-cols-${numColumns} grid-rows-${cards.length/numColumns}`
+    `2xl:grid-cols-${numColumns} grid-rows-${cards?.length/numColumns}`
     ].join(' ')
 
   return (
@@ -134,7 +134,7 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
 
       <div className={shelfType === "image" ? imageLayout : `grid grid-cols-6 gap-x-0`}>
         {/* deepcode ignore NoZeroReturnedInSort: <please specify a reason of ignoring this> */}
-        {cards.sort((a, b) => {
+        {cards?.sort((a, b) => {
           const direction = sortDirection === "DESC" ? -1 : 1
           return (a[sort] ?? 0) > (b[sort] ?? 0) ? 1 * direction : -1 * direction
         })

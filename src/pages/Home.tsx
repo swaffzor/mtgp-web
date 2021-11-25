@@ -14,6 +14,7 @@ const Home = () => {
   const [myDeck, setMyDeck] = useState<CardDTO[]>([])
   const [myHand, setMyHand] = useState<CardDTO[]>([])
   const [notFound, setNotFound] = useState<string[]>([])
+  const [displayHand, setDisplayHand] = useState(false)
 
   useEffect(() => {
     const savedCards = localStorage.getItem("my-deck")
@@ -56,7 +57,7 @@ const Home = () => {
         Magic Stats Gathering  
       </h1>
 
-      <NavBar/>
+      <NavBar setShowHand={() => setDisplayHand(!displayHand)}/>
 
       <DeckImport
         setDeck={setMyDeck}
@@ -91,13 +92,13 @@ const Home = () => {
         </div>)
       }
 
-      <CardShelf
+      {displayHand && (<CardShelf
         id="hand"
         title="In Hand"
         cards={myHand}
         shelfType="image"
         onCardClick={(card) => removeCardFromDeck(card, myHand, setMyHand)}
-      />
+      />)}
 
       <CardShelf
         id="my-deck"
