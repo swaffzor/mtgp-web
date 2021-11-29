@@ -1,24 +1,25 @@
 import React, { useEffect, useState } from 'react'
 import CardShelf from '../components/CardShelf'
+import Deck from '../components/Deck'
 import DeckImport from '../components/DeckImport'
 import Input from '../components/Input'
 import NavBar from '../components/NavBar'
 import { cardSearch } from '../service'
-import { CardDTO } from '../types'
+import { CardDTO, DeckDTO } from '../types'
 import { calculateProbability } from '../utils'
-
 
 const Home = () => {
   const [searchText, setSearchText] = useState("")
   const [searchResults, setSearchResults] = useState<CardDTO[]>([])
-  const [myDeck, setMyDeck] = useState<CardDTO[]>([])
+  const [myDeck, setMyDeck] = useState<DeckDTO>({name: "", cards: []})
+  const [savedDecks, setSavedDecks] = useState<DeckDTO[]>([])
   const [myHand, setMyHand] = useState<CardDTO[]>([])
   const [notFound, setNotFound] = useState<string[]>([])
   const [displayHand, setDisplayHand] = useState(false)
 
   useEffect(() => {
-    const savedCards = localStorage.getItem("my-deck")
-    savedCards && setMyDeck(JSON.parse(savedCards))
+    const savedCards = localStorage.getItem("my-decks")
+    savedCards && setSavedDecks(JSON.parse(savedCards))
   }, [])
 
   const searchCards = async (e: React.KeyboardEvent) => {
@@ -29,17 +30,17 @@ const Home = () => {
   }
 
   const saveCards = () => {
-    myDeck.forEach(card => card.isSaved = true)
-    localStorage.setItem("my-deck", JSON.stringify(myDeck))
+    myDeck.cards.forEach(card => card.isSaved = true)
+    localStorage.setItem("my-decks", JSON.stringify([...savedDecks, myDeck]))
   }
 
   const drawCard = (card: CardDTO) => {
     card.quantity = card?.quantity && card?.quantity - 1
-    calculateProbability(myDeck);
+    calculateProbability(myDeck.cards);
     if ((card.quantity??0) > 0) {
-      setMyDeck(myDeck)
+      setMyDeck({...myDeck})
     } else {
-      setMyDeck([...myDeck].filter(deckCard => deckCard.name !== card.name))      
+      setMyDeck({name: myDeck.name, cards:[...myDeck.cards].filter(deckCard => deckCard.name !== card.name)})
     }
     setMyHand([...myHand, card])
   }
@@ -52,12 +53,24 @@ const Home = () => {
   }
 
   return (
-    <div>
+    <div className="mx-1 ">
       <h1>
         Magic Stats Gathering  
       </h1>
 
       <NavBar setShowHand={() => setDisplayHand(!displayHand)}/>
+
+      {savedDecks && 
+        <div className="flex justify-center gap-4">
+          {(savedDecks.map(deck => <Deck
+            title={deck.name}
+            cards={deck.cards}
+            key={deck.name}
+            onClick={() => setMyDeck(deck)}
+          />))}
+        </div>
+      }
+      
 
       <DeckImport
         setDeck={setMyDeck}
@@ -73,20 +86,24 @@ const Home = () => {
       />
 
       {searchText && (
-      <CardShelf
-        id="search-results"
-        title="Search Results"
-        cards={searchResults}
-        shelfType="image"
-        onCardClick={(card) => setMyDeck([...myDeck, card])}
+        <CardShelf
+          id="search-results"
+          title="Search Results"
+          cards={searchResults}
+          shelfType="image"
+          onCardClick={(card) => {
+            const temp = myDeck.cards || []
+            temp.push(card)
+            setMyDeck({name: myDeck.name, cards: temp})
+          }}
       />)}
 
       {notFound.length > 0 && 
         (<div>
           <h1>Not Found</h1>
-          {notFound.map(c =>
-            <div key={`notfound-${c}`}>
-              {c}
+          {notFound.map(card =>
+            <div key={`notfound-${card}`}>
+              {card}
             </div>
           )}
         </div>)
@@ -103,7 +120,7 @@ const Home = () => {
       <CardShelf
         id="my-deck"
         title="My Deck"
-        cards={myDeck}
+        cards={myDeck.cards}
         shelfType="image"
         button={{text: "Save", onClick: saveCards}}
         onCardClick={drawCard}

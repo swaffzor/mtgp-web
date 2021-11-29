@@ -168,3 +168,8 @@ export interface Set {
 	onlineOnly?: true;
 	booster?: Booster;
 }
+
+export interface DeckDTO {
+  name: string
+  cards: CardDTO[]
+}

@@ -22,7 +22,7 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
   const [search, setSearch] = useState("")
   const [useSearchLock, setUseSearchLock] = useState(false)
   const [showProbability, setShowProbability] = useState(false)
-  const [shelfType, setShelfType] = useState<"image"|"list">("list")
+  const [shelfType, setShelfType] = useState<"image"|"list">("image")
   const [sort, setSort] = useState<CardSort>(CardSort.name)
   const [sortDirection, setSortDirection] = useState<""|"ASC"|"DESC">("")
   const searchRef = useRef<HTMLInputElement>(null)

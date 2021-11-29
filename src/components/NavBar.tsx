@@ -8,7 +8,7 @@ interface Props {
 
 const NavBar = ({setShowHand}: Props) => {
   return (
-    <div className="border border-b-2 border-blue-400 m-2 rounded">
+    <div className="border border-b-2 border-blue-400 my-2 rounded">
       <NavLink 
         content="Home"
         url=""
