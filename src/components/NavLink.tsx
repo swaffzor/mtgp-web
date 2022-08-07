@@ -1,16 +1,17 @@
-import React from 'react'
+import React, { ReactElement } from 'react'
 
 interface Props {
-  text: string
+  content: string | ReactElement
   url: string
+  onClick?: () => void
 }
 
-const NavLink = ({text, url}: Props) => {
+const NavLink = ({content, url, onClick}: Props) => {
 
   return (
     <div>
-      <button>
-        {text}
+      <button onClick={() => onClick && onClick()}>
+        {content}
       </button>
     </div>
   )

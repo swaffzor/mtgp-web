@@ -1,20 +1,21 @@
 import React, { useEffect, useState } from 'react'
 import Input from './Input'
 import TextareaAutosize from 'react-textarea-autosize';
-import { CardDTO, CardRequestParam } from '../types';
+import { CardDTO, CardRequestParam, DeckDTO } from '../types';
 import { fetchCard, CardFetchError } from '../service';
 import { calculateProbability, parseBy } from '../utils';
 
 interface Props {
-  setDeck: (d: CardDTO[]) => void
+  setDeck: (d: DeckDTO) => void
   setNotFound: (v: string[]) => void
 }
 
 const DeckImport = ({setDeck, setNotFound}: Props) => {
   const [isHidden, setIsHidden] = useState(true)
-  const [text, setText] = useState("")
+  const [importText, setImportText] = useState("")
   const [buttonDisabled, setButtonDisabled] = useState(false)
   const [cardsNotFound, setCardsNotFound] = useState<string[]>([])
+  const [deckName, setDeckName] = useState("")
 
   useEffect(() => {
     setNotFound(cardsNotFound)
@@ -34,13 +35,14 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
 
   const empty = {} as CardDTO
   const importDeck = async () => {
-    const textLines = text.split("\n")
+    const textLines = importText.split("\n")
     const promises = textLines.map(line => {
         const cardRequest: CardRequestParam = {
           name: parseBy("name", line),
           set: line.match(/\([A-Za-z]+[0-9]*\)/g)?.join("").trim().match(/[A-Za-z0-9]+/g)?.join("").trim(),
           quantity: parseBy("quantity", line),
         }
+        
         if (!cardRequest.name  && !cardRequest.quantity ) {
           return empty
         } 
@@ -62,7 +64,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
     const cards = (await Promise.all(promises)).filter(card => card !== empty)
     // await replaceImagelessCards(cards)
     calculateProbability(cards)
-    return cards
+    return {name: deckName, cards} as DeckDTO
   }
 
   const replaceImagelessCards = async (cards: CardDTO[]) => {
@@ -82,17 +84,18 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
   }
 
   return (
-    <div className="relative m-1">
+    <div className="relative my-2">
       <div className={`w-32 left-0 ${isHidden && "hidden"}`}>
         <Input
           type="text"
           placeholder="Deck Name"
           classOverrides="border rounded-lg px-1 w-32 left-0"
+          onChange={(e) => setDeckName(e.target.value)}
         />
         <TextareaAutosize 
           className="border rounded-lg px-1 left-0 w-80"
           minRows={6}
-          onChange={(e) => {setText(e.target.value)}}
+          onChange={(e) => {setImportText(e.target.value)}}
         />
         <br />
       </div>
