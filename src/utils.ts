@@ -16,11 +16,11 @@ export const parseBy = (key: string, text: string) => {
 }
 
 export const calculateProbability = (deck: CardDTO[]) => {
-  const deckTotal = deck.map(card => card.quantity).reduce((prev, curr) => {
+  const deckTotal = deck?.map(card => card.quantity).reduce((prev, curr) => {
     return (prev ?? 0) + (curr ?? 0)
   }, 0)
 
-  return deck.map(card => {
+  return deck?.map(card => {
     card.drawProbability = card?.quantity && (card?.quantity / (deckTotal ?? deck.length) * 100)
     return card
   })

@@ -62,7 +62,7 @@ const Home = () => {
 
       {savedDecks && 
         <div className="flex justify-center gap-4">
-          {(savedDecks.map(deck => <Deck
+          {(savedDecks?.map(deck => <Deck
             title={deck.name}
             cards={deck.cards}
             key={deck.name}
@@ -101,8 +101,8 @@ const Home = () => {
       {notFound.length > 0 && 
         (<div>
           <h1>Not Found</h1>
-          {notFound.map(card =>
-            <div key={`notfound-${card}`}>
+          {notFound?.map((card, index) =>
+            <div key={`notfound-${card}-${index}`}>
               {card}
             </div>
           )}

@@ -85,11 +85,11 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
         />
 
         {
-          Object.keys(CardSort).map(key => {
+          Object.keys(CardSort)?.map((key, index) => {
             return (
               <div 
                 className={`m-2 cursor-pointer ${sort === key && "border-b-2 border-gray-600"}`} 
-                key={key} 
+                key={`${key}-${index}`} 
                 onClick={() => {
                   let direction: ""|"ASC"|"DESC" = ""
                   switch (sortDirection) { 
@@ -139,7 +139,7 @@ const CardShelf = ({id, cards, title, button, onCardClick}: Props) => {
           return (a[sort] ?? 0) > (b[sort] ?? 0) ? 1 * direction : -1 * direction
         })
         .filter(card => card.name.toLowerCase().includes(search.toLowerCase()))
-        .map((card, index) => {
+        ?.map((card, index) => {
           return (
             <CardDisplay card={card} index={index} key={`${title}-${index}`}/>)
         })}

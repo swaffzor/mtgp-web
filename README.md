@@ -10,3 +10,4 @@ While in game, use this app to see the probability of each card being drawn next
 - [ ] search decks, real time updating
 - [ ] deck's card history
 - [ ] deck's win/loss
+- [ ] deployment documentation (heroku?)

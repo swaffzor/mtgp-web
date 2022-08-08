@@ -30,7 +30,7 @@ export const fetchCard = async (request: CardRequestParam): Promise<CardDTO[]> =
     throw new CardFetchError(404, `Card Not Found`, request)
   }
 
-  return cards.map(card => {
+  return cards?.map(card => {
     return {
       ...card,
       quantity: Number(request.quantity)
@@ -39,7 +39,7 @@ export const fetchCard = async (request: CardRequestParam): Promise<CardDTO[]> =
 }
 
 const buildParameters = (request: CardRequestParam) => {
-  const params = Object.entries(request).map(([key, value]) => value ? `${key}=${value}` : "")
+  const params = Object.entries(request)?.map(([key, value]) => value ? `${key}=${value}` : "")
     .filter(param => !param.includes("quantity"))
   return params.length > 0 ? `?${params.join("&")}` : ""
 }

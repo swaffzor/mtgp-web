@@ -36,7 +36,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
   const empty = {} as CardDTO
   const importDeck = async () => {
     const textLines = importText.split("\n")
-    const promises = textLines.map(line => {
+    const promises = textLines?.map(line => {
         const cardRequest: CardRequestParam = {
           name: parseBy("name", line),
           set: line.match(/\([A-Za-z]+[0-9]*\)/g)?.join("").trim().match(/[A-Za-z0-9]+/g)?.join("").trim(),
@@ -69,7 +69,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
 
   const replaceImagelessCards = async (cards: CardDTO[]) => {
     const cardsWithoutImages = cards.filter(card => !card.imageUrl)
-    const newReq = cardsWithoutImages.map(card => {
+    const newReq = cardsWithoutImages?.map(card => {
       return (card.type !== "imageless" 
         ? fetchCard({name: card.name, contains: "imageUrl", quantity: card.quantity?.toString()}) 
         : new Promise<CardDTO[]>((resolve, reject) => resolve([card]))
@@ -77,7 +77,7 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
       .then(res => res.find(findCard => findCard.imageUrl !== "") ?? card)})
     const cardsMostLikelyWithImages = await Promise.all(newReq)
     // eslint-disable-next-line array-callback-return
-    cardsMostLikelyWithImages.map((card) => {
+    cardsMostLikelyWithImages?.map((card) => {
       const index = cards.findIndex(imagelessCard => imagelessCard.name === card.name)
       index >= 0 && index < cards.length && cards.splice(index, 1, {...card, quantity: Number(card.quantity)})
     })
@@ -93,13 +93,13 @@ const DeckImport = ({setDeck, setNotFound}: Props) => {
           onChange={(e) => setDeckName(e.target.value)}
         />
         <TextareaAutosize 
-          className="border rounded-lg px-1 left-0 w-80"
+          className="left-0 px-1 border rounded-lg w-80"
           minRows={6}
           onChange={(e) => {setImportText(e.target.value)}}
         />
         <br />
       </div>
-      <div className="border rounded-lg px-4 w-32">
+      <div className="w-32 px-4 border rounded-lg">
         <button
           className={`${buttonDisabled && "text-gray-400"}`}
           onClick={handleButtonClick} 
